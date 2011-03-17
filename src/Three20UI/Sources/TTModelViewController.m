@@ -154,7 +154,7 @@
   }
 
   if (!_flags.isShowingLoading && !_flags.isShowingModel && !_flags.isShowingError) {
-    showEmpty = !_flags.isShowingEmpty;
+	showEmpty = YES;
     _flags.isShowingEmpty = YES;
 
   } else {
