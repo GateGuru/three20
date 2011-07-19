@@ -37,6 +37,11 @@
 
 static const NSInteger kLoadMaxRetries = 2;
 
+@interface TTRequestLoader (Private)
+- (void)connection:(NSURLConnection*)connection didReceiveResponse:(NSHTTPURLResponse*)response;
+- (void)connection:(NSURLConnection*)connection didReceiveData:(NSData*)data;
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection;
+@end
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
