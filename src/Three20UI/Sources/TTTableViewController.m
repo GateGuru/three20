@@ -337,7 +337,14 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)keyboardDidAppear:(BOOL)animated withBounds:(CGRect)bounds {
   [super keyboardDidAppear:animated withBounds:bounds];
-  self.tableView.frame = TTRectContract(self.tableView.frame, 0, bounds.size.height);
+  // GG-16027935 : This fixes an issue with the tableview resizing to a size
+  // smaller than the available space above the now-showing keyboard
+  CGRect screenRectInTableSuperView = [self.tableView.superview
+                                       convertRect:[UIScreen mainScreen].bounds
+                                       fromView:[UIApplication sharedApplication].keyWindow];
+  CGFloat bottomOffset = CGRectGetMaxY(screenRectInTableSuperView) -
+  CGRectGetMaxY(self.tableView.frame);
+  self.tableView.frame = TTRectContract(self.tableView.frame, 0, bounds.size.height - bottomOffset);
   [self.tableView scrollFirstResponderIntoView];
   [self layoutOverlayView];
   [self layoutBannerView];
@@ -353,7 +360,10 @@
   // self.view, which will call -loadView, which often calls self.tableView, which initializes it.
   if (_tableView) {
     CGRect previousFrame = self.tableView.frame;
-    self.tableView.frame = TTRectContract(self.tableView.frame, 0, -bounds.size.height);
+
+    // GG-16027935 : This fixes an issue with the tableview resizing to a size
+    // smaller than the available space above the now-showing keyboard
+    self.tableView.height = self.view.height;
 
     // There's any number of edge cases wherein a table view controller will get this callback but
     // it shouldn't resize itself -- e.g. when a controller has the keyboard up, and then drills
