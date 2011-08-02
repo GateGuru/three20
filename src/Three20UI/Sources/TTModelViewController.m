@@ -156,7 +156,9 @@
   }
 
   if (!_flags.isShowingLoading && !_flags.isShowingModel && !_flags.isShowingError) {
-    showEmpty = !_flags.isShowingEmpty;
+    // GG-16034755 : This fixes an issue with the empty view not
+    // updating when changing out the underlying datasource.
+    showEmpty = YES;
     _flags.isShowingEmpty = YES;
 
   } else {
